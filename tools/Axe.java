@@ -6,8 +6,6 @@ public class Axe extends Tool {
     
     public static final int PRICE = 150;
 
-    private static final String ASCII_ART_PATH = "res/ascii-art/axe.text";
-
     public static final String AXE_ICON = "\uD83E\uDE93";
 
     public Axe() {
@@ -16,21 +14,12 @@ public class Axe extends Tool {
 
     /**
      * Overriding the parent method.
-     * Call readASCIIArtFile to get the ASCIIS reprensentation
-     * of the current Tool
-     * @return ASCII art content
-     */
-    public String ASCIIArt() {
-        return this.readASCIIArtFile(Axe.ASCII_ART_PATH);
-    }
-
-    /**
-     * Overriding the parent method.
      * @param thing the Choppable to chop up
+     * @retun       the amount of credits earned
      */
     @Override
-    public void use(Choppable thing) {
-        thing.getChopped(Axe.PRICE / 100);
+    public int use(Choppable thing) {
+        return thing.getChopped(Axe.PRICE / 100);
     }
 
     /**

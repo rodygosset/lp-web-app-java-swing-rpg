@@ -22,7 +22,7 @@ public abstract class Choppable implements Paintable {
         // the lower the tool efficiency
         // the longer the player waits
         try {
-            TimeUnit.SECONDS.sleep(1 / toolEfficiency);
+            TimeUnit.MILLISECONDS.sleep(1500 / toolEfficiency);
             // when we're done, return the amount of credits earned 
             return creditValue;
         } catch(InterruptedException ie) {

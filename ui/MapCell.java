@@ -1,5 +1,9 @@
 package ui;
 
+import choppable.Choppable;
+import choppable.Tree;
+import tools.Tool;
+
 public class MapCell implements Paintable {
 
     private int x;
@@ -12,10 +16,38 @@ public class MapCell implements Paintable {
         this.content = c;
     }
 
-    public String position() {
-        return "(" + this.x + "," + this.y + ")";
+    /**
+     * Check if the content of the cell is choppable.
+     * @return true if that is the case, false otherwise.
+     */
+    public boolean isContentChoppable() {
+        return this.content instanceof Choppable;
     }
 
+    /**
+     * Check whether the cell is empty.
+     * @return true if that is the case, false otherwise.
+     */
+    public boolean isEmpty() {
+        return this.content == null;
+    }
+
+    
+    /** 
+     * If the content of the cell is choppable, proceed to chopping it
+     * @param t     the tool used to chop
+     * @return int  the amount of credits earned
+     */
+    public int chopContent(Tool t) {
+        if(!this.isContentChoppable()) { return 0; }
+        System.out.println("Chop chop " + t.paint() + " ...");
+        int credits = t.use((Choppable) content);
+        if(this.content instanceof Tree && ((Tree) this.content).chopsLeft() == 0 ||
+            !(this.content instanceof Tree)) {
+            this.content = null;
+        } 
+        return credits;
+    }
     
     /** 
      * Used to check the position of a MapCell

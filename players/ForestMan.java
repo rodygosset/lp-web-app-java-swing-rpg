@@ -9,6 +9,7 @@ import tools.Tool;
 public class ForestMan extends Player {
 
     public static final int INIT_CREDITS = 200;
+    public static final String FORESTMAN_ICON = "\uD83E\uDDD4";
     
     public ForestMan(String n) {
         super(
@@ -16,6 +17,10 @@ public class ForestMan extends Player {
             INIT_CREDITS, 
             new ArrayList<Tool>(Arrays.asList(new Axe()))
         );
+    }
+
+    public String paint() {
+        return FORESTMAN_ICON;
     }
 
 

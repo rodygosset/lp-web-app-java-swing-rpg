@@ -1,13 +1,14 @@
 package ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import choppable.Bush;
 import choppable.Choppable;
 import choppable.Tree;
+import tools.Tool;
 
 public class GameMap implements Paintable {
 
@@ -20,12 +21,55 @@ public class GameMap implements Paintable {
     private int nbObstacles;
     public static int MAX_TREE_HEIGHT = 3;
 
-    public static final String HORIZONTAL_LINE_UNICODE = "―";  
-    public static final String VERTICAL_LINE_UNICODE = "❘";    
-    public static final String TOP_LEFT_CORNER_UNICODE = "⌜";  
-    public static final String TOP_RIGHT_CORNER_UNICODE = "⌝";
-    public static final String BOTTOM_LEFT_CORNER_UNICODE = "⌞"; 
-    public static final String BOTTOM_RIGHT_CORNER_UNICODE = "⌟"; 
+
+    // UI utils
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
+    public static String colorGreen(String text) {
+        return ANSI_GREEN + text + ANSI_RESET;
+    }
+
+    public static String colorCyan(String text) {
+        return ANSI_CYAN + text + ANSI_RESET;
+    }
+
+    public static String colorYellow(String text) {
+        return ANSI_YELLOW + text + ANSI_RESET;
+    }
+
+    public static String colorPurple(String text) {
+        return ANSI_PURPLE + text + ANSI_RESET;
+    }
+
+
+    /**
+     * Read keyboard input
+     * @return what the user typed in
+     */
+    public static String prompt() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print(colorGreen("> "));
+        return sc.nextLine();
+    }
+
+    public static final String LOGO = """
+                
+░██╗░░░░░░░██╗░█████╗░░█████╗░██████╗░░█████╗░██╗░░██╗░█████╗░██████╗░
+░██║░░██╗░░██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██║░░██║██╔══██╗██╔══██╗
+░╚██╗████╗██╔╝██║░░██║██║░░██║██║░░██║██║░░╚═╝███████║██║░░██║██████╔╝
+░░████╔═████║░██║░░██║██║░░██║██║░░██║██║░░██╗██╔══██║██║░░██║██╔═══╝░
+░░╚██╔╝░╚██╔╝░╚█████╔╝╚█████╔╝██████╔╝╚█████╔╝██║░░██║╚█████╔╝██║░░░░░
+░░░╚═╝░░░╚═╝░░░╚════╝░░╚════╝░╚═════╝░░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░░░░
+                """;
 
     public GameMap() {
         this.nbColumns = NB_COLUMNS;
@@ -90,30 +134,15 @@ public class GameMap implements Paintable {
     /**
      * Clear the screen.
      */
-    public void clearScreen() {
+    public static void clearScreen() {
         System.out.println("\033[H\033[2J");
     }
 
-
-    // map drawing utils
-
-    private String getHL() { return HORIZONTAL_LINE_UNICODE; }
-
-    private String getVL() { return VERTICAL_LINE_UNICODE; }
-
-    private String getTLC() { return TOP_LEFT_CORNER_UNICODE; }
-
-    private String getTRC() { return TOP_RIGHT_CORNER_UNICODE; }
-
-    private String getBLC() { return BOTTOM_LEFT_CORNER_UNICODE; }
-
-    private String getBRC() { return BOTTOM_RIGHT_CORNER_UNICODE; }
-
-    private String horizontalLine() {
-        String l = "";
-        String hr = getHL() + getHL() + getHL(); // "―――"
-        for(int i = 0; i < this.nbColumns; i++) { l += hr; }
-        return l;
+    /**
+     * @return the colored game logo
+     */
+    public static String getLogo() {
+        return colorGreen(LOGO);
     }
     
     /** 
@@ -126,18 +155,13 @@ public class GameMap implements Paintable {
         int x = 0;
         int y = 0;
         int index = 0;
-        // draw the top map line
-        map += getTLC() + horizontalLine() + getTRC() + "\n" + getVL();
         for(int i = 0; i < this.nbColumns * this.nbColumns; i++) {
             // calculate the index of the cell in relation to its position on the map
             index = x * this.nbColumns + y;
             map += this.cells.get(index).paint();
             // if we've arrived to the end of the current line
             if((i + 1) % this.nbColumns == 0) {
-                map += getVL() + "\n";
-            }
-            if(i != this.nbColumns * this.nbColumns - 1) {
-                map += getVL();
+                map += "\n";
             }
             x++;
             if(x == this.nbColumns) {
@@ -145,8 +169,6 @@ public class GameMap implements Paintable {
                 y++;
             }
         }
-        // draw the bottom map line
-        map += getBLC() + horizontalLine() + getBRC() + '\n';
         return map;
     }
 
@@ -192,6 +214,36 @@ public class GameMap implements Paintable {
         // replace the cell at this position in the ArrayList
         // with one that contains p
         this.cells.set(index, new MapCell(x, y, p));
+    }
+
+    /**
+     * Check whether the cell at position (x,y) is empty.
+     * @param x position on the X axis
+     * @param y position on the Y axis
+     * @return  true if that is the case, false otherwise.
+     */
+    public boolean isCellEmpty(int x, int y) {
+        MapCell c = this.cells.stream().filter(cell -> cell.isAt(x, y)).findFirst().orElse(null);
+        return c != null && c.isEmpty();
+    }
+
+    /**
+     * Check whether the content of the cell at position (x,y) is choppable.
+     * @param x position on the X axis
+     * @param y position on the Y axis
+     * @return  true if that is the case, false otherwise.
+     */
+    public boolean isCellContentChoppable(int x, int y) {
+        MapCell c = this.cells.stream().filter(cell -> cell.isAt(x, y)).findFirst().orElse(null);
+        return c != null && c.isContentChoppable();
+    }
+
+
+    public int chopCellContent(int x, int y, Tool t) {
+        MapCell c = this.cells.stream().filter(cell -> cell.isAt(x, y)).findFirst().orElse(null);
+        if(c == null) { return 0; }
+        if(!c.isContentChoppable()) { return 0; }
+        return c.chopContent(t);
     }
 
 }

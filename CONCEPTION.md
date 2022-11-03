@@ -1,5 +1,8 @@
 # Mini Text-based RPG
 
+*Ce document n'est pas explicite en ce qui concerne les attributs et fonctions / méthodes des classes.*  
+*Il m'a permis de définir les relations entre les classes et les fonctionnalité de base nécessaires.*  
+
 ## Title
 
 ***WoodChop***
@@ -29,6 +32,8 @@
 - Methods
     - `public int getChopped(int toolEfficiency)`
 
+### Bush (extends Choppable)
+
 ### Tree (extends Choppable)
 
 - Attributes
@@ -42,16 +47,15 @@
 - Attributes
     - PRICE
 - Methods
-    - `public abstract String ASCIIArt()`
     - `public abstract void use(Choppable thing)` 
 - Child Classes
     - Axe
         - PRICE --> 150c
     - Saw
         - Hand Saw
-            - PRICE --> 230c
+            - PRICE --> 190c
         - Chain Saw
-            - PRICE --> 300c
+            - PRICE --> 230c
 
 ### Store
 - Attributes
@@ -69,7 +73,7 @@
 - Methods
     - `public int pay(int amount)`
     - `public void getPayed(int amount)`
-    - `public void play(GameMap map)`
+    - `public void play()`
 - Child classes
     - ForestMan
         - credits --> 200c
@@ -101,10 +105,3 @@
     - `public void render()`
     - `public void emptyCell(int x, int y)`
     - `public void putAt(int x, int y, Paintable p)`
-
-## The Game loop
-
-The steps are as follows:
-
-- UI asks the user to choose a character to play as
-- Shows the 2D map
