@@ -5,6 +5,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.swing.JLabel;
+
 import choppable.Bush;
 import choppable.Choppable;
 import choppable.Tree;
@@ -20,6 +22,8 @@ public class GameMap implements Paintable {
 
     private int nbObstacles;
     public static int MAX_TREE_HEIGHT = 3;
+
+    private JLabel UIComponent;
 
 
     // UI utils
@@ -71,10 +75,11 @@ public class GameMap implements Paintable {
 ░░░╚═╝░░░╚═╝░░░╚════╝░░╚════╝░╚═════╝░░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░░░░
                 """;
 
-    public GameMap() {
+    public GameMap(JLabel uic) {
         this.nbColumns = NB_COLUMNS;
         this.cells = new ArrayList<MapCell>(this.nbColumns * this.nbColumns);
         this.nbObstacles = this.nbColumns * 7;
+        this.UIComponent = uic;
         this.genMap();
     }
 
@@ -151,7 +156,7 @@ public class GameMap implements Paintable {
      */
     @Override
     public String paint() {
-        String map = "";
+        String map = "<html><body>";
         int x = 0;
         int y = 0;
         int index = 0;
@@ -161,7 +166,7 @@ public class GameMap implements Paintable {
             map += this.cells.get(index).paint();
             // if we've arrived to the end of the current line
             if((i + 1) % this.nbColumns == 0) {
-                map += "\n";
+                map += "<br/>";
             }
             x++;
             if(x == this.nbColumns) {
@@ -169,6 +174,7 @@ public class GameMap implements Paintable {
                 y++;
             }
         }
+        map += "</body></html>";
         return map;
     }
 
@@ -176,7 +182,7 @@ public class GameMap implements Paintable {
      * Display the visusal representation of the map on the screen.
     */
     public void render() {
-        System.out.println(this.paint());
+        this.UIComponent.setText(this.paint());
     }
 
     

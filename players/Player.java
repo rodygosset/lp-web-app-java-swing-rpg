@@ -2,8 +2,17 @@ package players;
 
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import tools.Store;
 import tools.Tool;
+import ui.EmojiFont;
 import ui.GameMap;
 import ui.Paintable;
 
@@ -125,7 +134,7 @@ public abstract class Player implements Paintable {
      * @return colored text indicating relevant player information.
      */
     private String getPlayerInfoMenu() {
-        String menuString = "\n" + GameMap.colorGreen(this.name) + " - " + GameMap.colorYellow(this.getClass().getSimpleName()) + " " + this.paint();
+        String menuString = GameMap.colorGreen(this.name) + " - " + GameMap.colorYellow(this.getClass().getSimpleName()) + " " + this.paint();
         menuString += " - " + GameMap.colorCyan(Integer.toString(this.credits) + "c");
         menuString += " - " + GameMap.colorPurple("Tools: ");
         for(int i = 0; i < this.tools.size(); i++) {
@@ -134,7 +143,7 @@ public abstract class Player implements Paintable {
                 menuString += "  - ";
             }
         }
-        return menuString + "\n";
+        return menuString;
     }
 
     private boolean handleUserChoice(String choice, GameMap map, Store store) {
@@ -166,16 +175,69 @@ public abstract class Player implements Paintable {
         return false;
     }
 
-    public void play() {
-        GameMap map = new GameMap();
-        Store store = new Store();
+    private class MyKeyAdapter extends KeyAdapter {
+
+        private Player player;
+        private GameMap map;
+
+        public MyKeyAdapter(Player p, GameMap m) {
+            this.player = p;
+            this.map = m;
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            switch(keyCode) {
+                case KeyEvent.VK_UP:
+                    player.move(map, 0, -1);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    player.move(map, 0, 1);
+                    break;
+                case KeyEvent.VK_LEFT:
+                    player.move(map, -1, 0);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    player.move(map, 1, 0);
+                    break;
+                default:
+                    break;
+            }
+            map.render();
+        }
+
+    }
+
+    public void play(JFrame window) {
+        JLabel mapUIComponent = new JLabel();
+        // config the JLabel so it can display the unicode emojis
+        mapUIComponent.setFont(new EmojiFont().getEmojiFont(20f));
+        GameMap map = new GameMap(mapUIComponent);
+        JLabel gameTitle = new JLabel("WOODCHOP");
+        gameTitle.setForeground(Color.GREEN);
+        gameTitle.setFont(new Font("Montserrat", Font.BOLD, 48));
+        window.getContentPane().add(gameTitle, BorderLayout.NORTH);
+        window.getContentPane().add(mapUIComponent, BorderLayout.CENTER);
         // put the player in the bottom left corner
         this.xPos = 0;
         this.yPos = 9;
         map.putAt(this.xPos, this.yPos, this);
+        // set up the key listeners used to move the player around the map
+        window.addKeyListener(new MyKeyAdapter(this, map));
+        map.render();
+    }
+
+    public void oldPlay() {
+        // GameMap map = new GameMap();
+        Store store = new Store();
+        // put the player in the bottom left corner
+        this.xPos = 0;
+        this.yPos = 9;
+        // map.putAt(this.xPos, this.yPos, this);
         System.out.println();
         // show the map
-        map.render();
+        // map.render();
         System.out.println();
         String choice = "";
         boolean over = false;
@@ -191,26 +253,13 @@ public abstract class Player implements Paintable {
             System.out.println("\ts --> go to the " + GameMap.colorPurple("tool store"));
             System.out.println("\tq --> quit game");
             choice = GameMap.prompt();
-            over = handleUserChoice(choice, map, store);
+            // over = handleUserChoice(choice, map, store);
             GameMap.clearScreen();
             System.out.println(GameMap.colorGreen(GameMap.LOGO));
-            map.render();
+            // map.render();
         }
-        String youWinString = """
-                    
-█▄█ █▀█ █░█   █░█░█ █ █▄░█
-░█░ █▄█ █▄█   ▀▄▀▄▀ █ █░▀█
-                    """;
-        String goodbyeString = """
-                
-██████╗░██╗░░░██╗███████╗
-██╔══██╗╚██╗░██╔╝██╔════╝
-██████╦╝░╚████╔╝░█████╗░░
-██╔══██╗░░╚██╔╝░░██╔══╝░░
-██████╦╝░░░██║░░░███████╗
-╚═════╝░░░░╚═╝░░░╚══════╝
-                """;
-        System.out.println(GameMap.colorGreen(this.playerWon() ? youWinString : goodbyeString));
+        // todo --> display youWin or goodbye message in a modal dialog (js alert style)
+        // System.out.println(GameMap.colorGreen(this.playerWon() ? youWinString : goodbyeString));
     }
 
     @Override
