@@ -68,7 +68,8 @@ public class MapCell implements Paintable {
     public String paint() {
         if(this.content == null) {
             // return "  ";
-            return "&nbsp;";
+            // return "&nbsp;";
+            return "\uD83C\uDF43";
         }
         return content.paint();
     }

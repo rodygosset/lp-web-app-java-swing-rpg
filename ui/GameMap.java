@@ -2,7 +2,6 @@ package ui;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JLabel;
@@ -25,55 +24,6 @@ public class GameMap implements Paintable {
 
     private JLabel UIComponent;
 
-
-    // UI utils
-
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-
-    public static String colorGreen(String text) {
-        return ANSI_GREEN + text + ANSI_RESET;
-    }
-
-    public static String colorCyan(String text) {
-        return ANSI_CYAN + text + ANSI_RESET;
-    }
-
-    public static String colorYellow(String text) {
-        return ANSI_YELLOW + text + ANSI_RESET;
-    }
-
-    public static String colorPurple(String text) {
-        return ANSI_PURPLE + text + ANSI_RESET;
-    }
-
-
-    /**
-     * Read keyboard input
-     * @return what the user typed in
-     */
-    public static String prompt() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print(colorGreen("> "));
-        return sc.nextLine();
-    }
-
-    public static final String LOGO = """
-                
-░██╗░░░░░░░██╗░█████╗░░█████╗░██████╗░░█████╗░██╗░░██╗░█████╗░██████╗░
-░██║░░██╗░░██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██║░░██║██╔══██╗██╔══██╗
-░╚██╗████╗██╔╝██║░░██║██║░░██║██║░░██║██║░░╚═╝███████║██║░░██║██████╔╝
-░░████╔═████║░██║░░██║██║░░██║██║░░██║██║░░██╗██╔══██║██║░░██║██╔═══╝░
-░░╚██╔╝░╚██╔╝░╚█████╔╝╚█████╔╝██████╔╝╚█████╔╝██║░░██║╚█████╔╝██║░░░░░
-░░░╚═╝░░░╚═╝░░░╚════╝░░╚════╝░╚═════╝░░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░░░░
-                """;
 
     public GameMap(JLabel uic) {
         this.nbColumns = NB_COLUMNS;
@@ -141,13 +91,6 @@ public class GameMap implements Paintable {
      */
     public static void clearScreen() {
         System.out.println("\033[H\033[2J");
-    }
-
-    /**
-     * @return the colored game logo
-     */
-    public static String getLogo() {
-        return colorGreen(LOGO);
     }
     
     /** 

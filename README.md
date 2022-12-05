@@ -1,6 +1,6 @@
 # Woodchop
 
-*Java mini text-based RPG*
+*Mini Java Swing RPG*
 
 ## Conception & documentation
 
@@ -26,20 +26,14 @@ La vitesse à laquelle les outils coupent le bois est proportionnelle
 Plus le prix est élevé, plus l'outil coupe le bois rapidement.
 À chaque arbre / buisson coupé, vous récupérez sa valeur en crédits.
 
-![game screenshot](readme-res/game-store.png)
-
-Le magasin (store) permet d'échanger ses outils contre de l'argent,  
-ou d'acheter des outils.
-
 ## Commandes
 
-Les touches permettant de se déplacer et d'accéder au magasin,  
-ainsi qu'au autres options du jeu, sont indiquées à chaque fois.
-Pas besoin donc de les retenir.
+Pour se déplacer, utilisez les flèches du clavier (gauche, droite, haut, bas).
+Pour quitter le jeu, appuyez sur la touche 'q'.
 
 ## Installation
 
-Il y a seulement besoin de télécharger le fichier `woodchop.jar`
+Il y a seulement besoin de télécharger le fichier `woodchop-gui.jar`
 
 ## Utilisation
 
@@ -47,7 +41,7 @@ Ce jeu est fait pour être joué depuis le terminal, donc depuis la ligne de com
 naviguez jusqu'au dossier où se trouve le fichier jar, et écrivez:
 
 ```
-java -jar woodchop.jar
+java -jar woodchop-gui.jar
 ```
 
 
